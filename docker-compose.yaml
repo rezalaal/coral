@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: cafe-menu-db
+    restart: always
+    environment:
+      POSTGRES_USER: cafeuser
+      POSTGRES_PASSWORD: cafepass123
+      POSTGRES_DB: cafedb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: cafe-menu-app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://cafeuser:cafepass123@db:5432/cafedb?sslmode=disable
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: ["./app-binary"]
+
+volumes:
+  pgdata:
