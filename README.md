@@ -40,6 +40,8 @@ docker-compose up --build
 
 دیتابیس PostgreSQL روی پورت 5432
 
+pgAdmin http://localhost:8081
+
 ### ساختار پروژه
 ```
 /cmd/server — نقطه ورود برنامه
