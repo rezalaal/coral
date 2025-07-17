@@ -60,8 +60,9 @@ pgAdmin http://localhost:8081
 ### دستورات کاربردی:
 
 ```
-migrate -path migrations -database "postgres://cafeuser:cafepass123@localhost:5432/cafedb?sslmode=disable" up
-migrate -path migrations -database "postgres://cafeuser:cafepass123@localhost:5432/cafedb?sslmode=disable" down
+make migrate-up
+make migrate-down
+make migrate-create name=create_initial_schema
 ```
 توسعه و همکاری
 کدها بر اساس اصول Clean Architecture و DDD ساختاربندی شده‌اند.
