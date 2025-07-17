@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:15
@@ -11,6 +13,8 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - cafe-net
 
   app:
     build: .
@@ -23,9 +27,27 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./cmd:/app/cmd  # فقط سورس‌کد mount بشه
-      - ./internal:/app/internal  # اگر پوشه internal داری
+      - ./cmd:/app/cmd
+      - ./internal:/app/internal
     command: ["./bin/server"]
+    networks:
+      - cafe-net
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: cafe-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - cafe-net
 
 volumes:
   pgdata:
+
+networks:
+  cafe-net:
+    driver: bridge
