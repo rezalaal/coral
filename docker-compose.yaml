@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:15
@@ -25,9 +23,9 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./:/app
-    working_dir: /app
-    command: ["./app-binary"]
+      - ./cmd:/app/cmd  # فقط سورس‌کد mount بشه
+      - ./internal:/app/internal  # اگر پوشه internal داری
+    command: ["./bin/server"]
 
 volumes:
   pgdata:
