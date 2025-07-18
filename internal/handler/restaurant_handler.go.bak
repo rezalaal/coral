@@ -1,0 +1,43 @@
+package handler
+
+import (
+	"encoding/json"
+	"net/http"
+
+	"github.com/rezalaal/coral/internal/models"
+	"github.com/rezalaal/coral/internal/repository/interfaces"
+)
+
+type RestaurantHandler struct {
+	Repo interfaces.RestaurantRepository
+}
+
+func NewRestaurantHandler(repo interfaces.RestaurantRepository) *RestaurantHandler {
+	return &RestaurantHandler{Repo: repo}
+}
+
+func (h *RestaurantHandler) GetRestaurants(w http.ResponseWriter, r *http.Request) {
+	restaurants, err := h.Repo.List()
+	if err != nil {
+		http.Error(w, "خطا در دریافت رستوران‌ها", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(restaurants)
+}
+
+func (h *RestaurantHandler) CreateRestaurant(w http.ResponseWriter, r *http.Request) {
+	var restaurant models.Restaurant
+	if err := json.NewDecoder(r.Body).Decode(&restaurant); err != nil {
+		http.Error(w, "درک داده ورودی ممکن نیست", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.Repo.Create(&restaurant); err != nil {
+		http.Error(w, "خطا در ایجاد رستوران", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(restaurant)
+}

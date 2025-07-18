@@ -1,20 +1,26 @@
-MIGRATIONS_PATH=$(shell pwd)/migrations
+MIGRATIONS_PATH=$(shell pwd)/internal/db/migrations
 DB_URL=postgres://cafeuser:cafepass123@db:5432/cafedb?sslmode=disable
 NETWORK_NAME=coral_cafe-net
+MIGRATE_IMAGE=migrate/migrate
 
 migrate-up:
 	docker run --rm -v $(MIGRATIONS_PATH):/migrations \
 		--network $(NETWORK_NAME) \
-		migrate/migrate \
-		-path=/migrations \
-		-database "$(DB_URL)" \
-		up
+		$(MIGRATE_IMAGE) \
+		-path=/migrations -database "$(DB_URL)" up
 
 migrate-down:
-	docker run --rm -v $(PWD)/migrations:/migrations \
-	  --network $(NETWORK_NAME) \
-	  $(MIGRATE_IMAGE) -path=/migrations -database "$(DB_URL)" down 1
+	docker run --rm -v $(MIGRATIONS_PATH):/migrations \
+		--network $(NETWORK_NAME) \
+		$(MIGRATE_IMAGE) \
+		-path=/migrations -database "$(DB_URL)" down 1
 
 migrate-create:
-	docker run --rm -v $(PWD)/migrations:/migrations \
-	  $(MIGRATE_IMAGE) create -ext sql -dir /migrations -seq $(name)
+	docker run --rm -v $(MIGRATIONS_PATH):/migrations \
+		$(MIGRATE_IMAGE) \
+		create -ext sql -dir /migrations -seq $(name)
+
+seed:
+	sudo go run $(PWD)/cmd/seed/main.go
+
+
