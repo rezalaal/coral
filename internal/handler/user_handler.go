@@ -1,3 +1,4 @@
+// internal/handler/user_handler.go
 package handler
 
 import (

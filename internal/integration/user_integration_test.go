@@ -1,3 +1,4 @@
+// internal/integration/user_integration_test.go
 package integration_test
 
 import (

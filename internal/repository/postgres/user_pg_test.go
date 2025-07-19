@@ -1,3 +1,4 @@
+// internal/repository/postgres
 package postgres_test
 
 import (
