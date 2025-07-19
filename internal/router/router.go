@@ -6,7 +6,7 @@ import (
 	"github.com/rezalaal/coral/internal/repository/interfaces"
 )
 
-func NewRouter(userRepo interfaces.UserRepository, restaurantRepo interfaces.RestaurantRepository) http.Handler {
+func NewRouter(userRepo interfaces.UserRepository) http.Handler {
 	mux := http.NewServeMux()
 
 	// Handlers
