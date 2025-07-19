@@ -1,6 +1,6 @@
 MIGRATIONS_PATH=$(shell pwd)/internal/db/migrations
 DB_URL=postgres://cafeuser:cafepass123@db:5432/cafedb?sslmode=disable
-NETWORK_NAME=coral_cafe-net
+NETWORK_NAME=go-version_cafe-net
 MIGRATE_IMAGE=migrate/migrate
 
 migrate-up:
@@ -23,4 +23,7 @@ migrate-create:
 seed:
 	sudo go run $(PWD)/cmd/seed/main.go
 
+test:
+	go test -v ./internal/repository/postgres
+	go test -v ./internal/integration
 

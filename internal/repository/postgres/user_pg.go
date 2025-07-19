@@ -18,7 +18,7 @@ func NewUserPG(db *sql.DB) *UserPG {
 
 func (r *UserPG) Create(user *models.User) error {
 	query := `INSERT INTO users (name, mobile, password_hash) 
-	          VALUES ($1, $2, $3) RETURNING id, created_at, updated_at`
+			VALUES ($1, $2, $3) RETURNING id, created_at, updated_at`
 	return r.DB.QueryRow(query, user.Name, user.Mobile, user.PasswordHash).
 		Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
 }

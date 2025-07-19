@@ -5,29 +5,29 @@ import (
     "encoding/json"
     "net/http"
     "net/http/httptest"
+    "strings"
     "testing"
 
     "github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/require"
+
     "github.com/rezalaal/coral/internal/db"
     "github.com/rezalaal/coral/internal/models"
     "github.com/rezalaal/coral/internal/repository/postgres"
     "github.com/rezalaal/coral/internal/router"
+    "github.com/rezalaal/coral/internal/repository/interfaces"
 )
 
 func setupTestServer(t *testing.T) (*httptest.Server, func()) {
     dbConn, err := db.Connect()
     assert.NoError(t, err)
 
-    // پاکسازی دیتابیس قبل از شروع تست
     _, err = dbConn.Exec("DELETE FROM users")
     assert.NoError(t, err)
 
-    userRepo := postgres.NewUserPG(dbConn)
+    var userRepo interfaces.UserRepository = postgres.NewUserPG(dbConn)
 
-    // اگر رستوران هم بخوای تست کنی، مشابه همین بساز
-
-    r := router.NewRouter(userRepo, nil)
-
+    r := router.NewRouter(userRepo)
     server := httptest.NewServer(r)
 
     return server, func() {
@@ -40,7 +40,6 @@ func TestUserIntegration(t *testing.T) {
     server, teardown := setupTestServer(t)
     defer teardown()
 
-    // ساخت payload برای ایجاد کاربر
     userPayload := map[string]string{
         "name":          "Integration User",
         "mobile":        "09121234567",
@@ -48,7 +47,6 @@ func TestUserIntegration(t *testing.T) {
     }
     payloadBytes, _ := json.Marshal(userPayload)
 
-    // ارسال درخواست POST به مسیر ایجاد کاربر
     resp, err := http.Post(server.URL+"/users/create", "application/json", bytes.NewReader(payloadBytes))
     assert.NoError(t, err)
     assert.Equal(t, http.StatusCreated, resp.StatusCode)
@@ -59,7 +57,6 @@ func TestUserIntegration(t *testing.T) {
     assert.Equal(t, "Integration User", createdUser.Name)
     resp.Body.Close()
 
-    // درخواست لیست کاربران
     resp, err = http.Get(server.URL + "/users")
     assert.NoError(t, err)
     assert.Equal(t, http.StatusOK, resp.StatusCode)
@@ -71,18 +68,17 @@ func TestUserIntegration(t *testing.T) {
 }
 
 func TestCreateUser_InvalidJSON(t *testing.T) {
-	server := test.NewTestServer()
-	defer server.Close()
+    server, teardown := setupTestServer(t)
+    defer teardown()
 
-	body := `{"name": "علی", "mobile": "0935...` // JSON ناقص
-	resp, err := http.Post(server.URL+"/users", "application/json", strings.NewReader(body))
-	require.NoError(t, err)
-	defer resp.Body.Close()
+    body := `{"name": "علی", "mobile": "0935...` // JSON ناقص
+    resp, err := http.Post(server.URL+"/users/create", "application/json", strings.NewReader(body))
+    require.NoError(t, err)
+    defer resp.Body.Close()
 
-	require.Equal(t, http.StatusBadRequest, resp.StatusCode)
+    require.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
-	var msg string
-	json.NewDecoder(resp.Body).Decode(&msg)
-	assert.Contains(t, msg, "نامعتبر")
+    var msg string
+    json.NewDecoder(resp.Body).Decode(&msg)
+    assert.Contains(t, msg, "نامعتبر")
 }
-
