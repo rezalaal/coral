@@ -29,5 +29,7 @@ docker-compose.override.yml
 .idea/
 .vscode/
 
+.env
+
 # از خود .gitignore صرف‌نظر نکن
 !.gitignore

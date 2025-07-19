@@ -4,12 +4,19 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/joho/godotenv"
 	"github.com/rezalaal/coral/internal/db"
 	"github.com/rezalaal/coral/internal/repository/postgres"
 	"github.com/rezalaal/coral/internal/router"
 )
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(".env not found")
+	}
+
 	dbConn, err := db.Connect()
 	if err != nil {
 		log.Fatal("Database connection failed:", err)
