@@ -1,0 +1,49 @@
+package integration
+
+import (
+	"database/sql"
+	"net/http/httptest"
+	"path/filepath"
+	"testing"
+
+	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/rezalaal/coral/internal/db"
+	"github.com/rezalaal/coral/internal/repository/postgres"
+	"github.com/rezalaal/coral/internal/router"
+)
+
+// اتصال به دیتابیس با بررسی خطا
+func connectTestDB(t *testing.T) *sql.DB {
+	rootPath, _ := filepath.Abs(filepath.Join("..", "..", ".env"))
+	err := godotenv.Load(rootPath)
+	assert.NoError(t, err)
+	
+	conn, err := db.Connect()
+	assert.NoError(t, err)
+	return conn
+}
+
+// پاک‌سازی دیتابیس (در حال حاضر فقط جدول users)
+func cleanupDB(t *testing.T, db *sql.DB) {
+	_, err := db.Exec("DELETE FROM users")
+	assert.NoError(t, err)
+}
+
+// ساخت سرور تست با پاک‌سازی دیتابیس
+func SetupTestServer(t *testing.T) (*httptest.Server, func()) {
+	dbConn := connectTestDB(t)
+	cleanupDB(t, dbConn)
+
+	userRepo := postgres.NewUserPG(dbConn)
+	r := router.NewRouter(userRepo)
+	server := httptest.NewServer(r)
+
+	teardown := func() {
+		dbConn.Close()
+		server.Close()
+	}
+
+	return server, teardown
+}

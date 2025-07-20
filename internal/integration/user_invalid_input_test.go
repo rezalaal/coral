@@ -1,5 +1,4 @@
-// internal/integration/user_invalid_input_test.go
-package integration
+package integration_test
 
 import (
 	"io"
@@ -9,11 +8,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	
+	"github.com/rezalaal/coral/internal/integration"
 )
 
-func TestCreateUser_InvalidJSON(t *testing.T) {
-	server := test.NewTestServer()
-	defer server.Close()
+func TestCreateUser_InvalidInput(t *testing.T) {
+	server, teardown := integration.SetupTestServer(t)
+	defer teardown()
 
 	tests := []struct {
 		name       string
@@ -23,40 +24,40 @@ func TestCreateUser_InvalidJSON(t *testing.T) {
 	}{
 		{
 			name:       "ناقص بودن JSON",
-			payload:    `{"name": "علی", "mobile": "0935...`, // ناقص و بسته نشده
+			payload:    `{"name": "علی", "mobile": "0935...`, // JSON ناقص
 			wantStatus: http.StatusBadRequest,
-			wantBody:   "نامعتبر",
+			wantBody:   "خطای تجزیه‌ی JSON",
 		},
 		{
 			name:       "مقدار اشتباه برای name",
-			payload:    `{"name": 123, "mobile": "09351234567"}`,
+			payload:    `{"name": 123, "mobile": "09351234567"}`, // نوع نامعتبر
 			wantStatus: http.StatusBadRequest,
-			wantBody:   "نامعتبر",
+			wantBody:   "خطای تجزیه‌ی JSON",
 		},
 		{
 			name:       "عدم وجود فیلد name",
 			payload:    `{"mobile": "09351234567"}`,
-			wantStatus: http.StatusInternalServerError, // چون فرض ما اینه در repo باید validate بشه
-			wantBody:   "خطا در ایجاد کاربر",
+			wantStatus: http.StatusBadRequest,
+			wantBody:   "خطا در ایجاد کاربر: فیلدهای ضروری ناقص هستند",
 		},
 		{
 			name:       "عدم وجود فیلد mobile",
 			payload:    `{"name": "کاربر بدون موبایل"}`,
-			wantStatus: http.StatusInternalServerError,
-			wantBody:   "خطا در ایجاد کاربر",
+			wantStatus: http.StatusBadRequest,
+			wantBody:   "خطا در ایجاد کاربر: فیلدهای ضروری ناقص هستند",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resp, err := http.Post(server.URL+"/users", "application/json", strings.NewReader(tt.payload))
+			resp, err := http.Post(server.URL+"/users/create", "application/json", strings.NewReader(tt.payload))
 			require.NoError(t, err)
 			defer resp.Body.Close()
 
 			assert.Equal(t, tt.wantStatus, resp.StatusCode)
 
-			data, _ := io.ReadAll(resp.Body)
-			assert.Contains(t, string(data), tt.wantBody)
+			body, _ := io.ReadAll(resp.Body)
+			assert.Contains(t, string(body), tt.wantBody)
 		})
 	}
 }

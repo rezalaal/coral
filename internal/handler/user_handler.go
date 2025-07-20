@@ -4,6 +4,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/rezalaal/coral/internal/models"
 	"github.com/rezalaal/coral/internal/repository/interfaces"
@@ -28,15 +29,20 @@ func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
-// ایجاد کاربر جدید
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		http.Error(w, "داده ورودی نامعتبر است", http.StatusBadRequest)
+		http.Error(w, "خطای تجزیه‌ی JSON", http.StatusBadRequest)
 		return
 	}
 
-	if err := h.Repo.Create(&user); err != nil {
+	if strings.TrimSpace(user.Name) == "" || strings.TrimSpace(user.Mobile) == "" {
+		http.Error(w, "خطا در ایجاد کاربر: فیلدهای ضروری ناقص هستند", http.StatusBadRequest)
+		return
+	}
+
+	err := h.Repo.Create(&user)
+	if err != nil {
 		http.Error(w, "خطا در ایجاد کاربر", http.StatusInternalServerError)
 		return
 	}
