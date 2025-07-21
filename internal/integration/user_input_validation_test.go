@@ -51,6 +51,25 @@ func TestCreateUser_InputValidation(t *testing.T) {
 			wantStatus: http.StatusBadRequest,
 			wantBody:   "نام معتبر نیست",
 		},
+		{
+			name:       "نام بسیار طولانی",
+			payload:    `{"name": "این یک نام بسیار طولانی است که از حد مجاز عبور می‌کند و باید خطا بدهد", "mobile": "09121234567"}`,
+			wantStatus: http.StatusBadRequest,
+			wantBody:   "نام معتبر نیست",
+		},
+		{
+			name:       "نام با کاراکتر غیرمجاز",
+			payload:    `{"name": "Ali123", "mobile": "09121234567"}`, // کاراکتر عددی در نام
+			wantStatus: http.StatusBadRequest,
+			wantBody:   "نام معتبر نیست",
+		},
+		{
+			name:       "شماره موبایل کوتاه",
+			payload:    `{"name": "علی", "mobile": "0912"}`, // موبایل کوتاه‌تر از حد مجاز
+			wantStatus: http.StatusBadRequest,
+			wantBody:   "شماره موبایل نامعتبر است",
+		},
+
 	}
 
 	for _, tt := range tests {
