@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -91,6 +92,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	// ایجاد کاربر در دیتابیس
 	err := h.Repo.Create(&user)
 	if err != nil {
+		log.Printf("Error creating user: %v", err)  // ثبت خطا در لاگ
 		http.Error(w, "خطا در ایجاد کاربر", http.StatusInternalServerError)
 		return
 	}
