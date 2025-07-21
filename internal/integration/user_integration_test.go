@@ -3,6 +3,7 @@ package integration_test
 import (
 	"bytes"
 	"encoding/json"
+	
 	"net/http"
 	"testing"
 
@@ -17,31 +18,45 @@ func TestUserIntegration(t *testing.T) {
 	server, teardown := integration.SetupTestServer(t)
 	defer teardown()
 
-	// ساخت کاربر
+	// ساخت کاربر با داده‌های معتبر
 	userPayload := map[string]string{
-		"name":          "Integration User",
-		"mobile":        "09121234567",
-		"password_hash": "hashedpass",
+		"name":          "Integration User", // نام معتبر
+		"mobile":        "09121234567",      // شماره موبایل معتبر
+		"password_hash": "hashedpass",       // پسورد هَش‌شده معتبر
 	}
 	payloadBytes, _ := json.Marshal(userPayload)
 
+	// ارسال درخواست POST برای ساخت کاربر
 	resp, err := http.Post(server.URL+"/users/create", "application/json", bytes.NewReader(payloadBytes))
 	require.NoError(t, err)
-	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
+	// بررسی وضعیت پاسخ
+	assert.Equal(t, http.StatusCreated, resp.StatusCode, "Expected HTTP Status: 201 Created")
 
 	var createdUser models.User
 	err = json.NewDecoder(resp.Body).Decode(&createdUser)
-	assert.NoError(t, err)
-	assert.Equal(t, "Integration User", createdUser.Name)
+	require.NoError(t, err)
+
+	// بررسی داده‌های کاربر ایجاد شده
+	assert.Equal(t, "Integration User", createdUser.Name, "User name mismatch")
+
+	// بستن body پاسخ پس از استفاده
 	resp.Body.Close()
 
-	// دریافت لیست کاربران
+	// دریافت لیست کاربران با دقت بیشتر در تشخیص خطا
 	resp, err = http.Get(server.URL + "/users")
 	require.NoError(t, err)
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
+
+	// بررسی وضعیت پاسخ دریافت کاربران
+	assert.Equal(t, http.StatusOK, resp.StatusCode, "Expected HTTP Status: 200 OK")
 
 	var users []models.User
 	err = json.NewDecoder(resp.Body).Decode(&users)
-	assert.NoError(t, err)
-	assert.GreaterOrEqual(t, len(users), 1)
+	require.NoError(t, err)
+
+	// بستن body پس از خواندن
+	resp.Body.Close()
+
+	// بررسی اینکه حداقل یک کاربر وجود دارد
+	assert.GreaterOrEqual(t, len(users), 1, "Expected at least one user")
 }
