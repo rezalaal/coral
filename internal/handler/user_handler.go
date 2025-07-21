@@ -23,7 +23,6 @@ func isAlpha(s string) bool {
 	return regexp.MustCompile(`^[a-zA-Z\x{0600}-\x{06FF}\s]+$`).MatchString(s)
 }
 
-
 func isValidName(name string) bool {
 	// بررسی اینکه نام تنها شامل حروف انگلیسی و فارسی باشد
 	if !isAlpha(name) {
@@ -43,6 +42,23 @@ func isValidMobile(mobile string) bool {
 	return regexp.MustCompile(`^\d{11}$`).MatchString(mobile)
 }
 
+// تابع برای تبدیل اعداد فارسی به انگلیسی
+func convertPersianToEnglishNumbers(input string) string {
+	replacement := map[rune]rune{
+		'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+		'۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',
+	}
+
+	var result []rune
+	for _, char := range input {
+		if englishChar, exists := replacement[char]; exists {
+			result = append(result, englishChar)
+		} else {
+			result = append(result, char)
+		}
+	}
+	return string(result)
+}
 
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
@@ -57,6 +73,9 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "خطا در ایجاد کاربر: فیلدهای ضروری ناقص هستند", http.StatusBadRequest)
 		return
 	}
+
+	// تبدیل شماره موبایل به انگلیسی در صورت لزوم
+	user.Mobile = convertPersianToEnglishNumbers(user.Mobile)
 
 	// اعتبارسنجی ورودی‌ها
 	if !isValidName(user.Name) {
