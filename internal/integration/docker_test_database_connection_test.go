@@ -3,7 +3,7 @@ package integration_test
 import (
 	"database/sql"
 	"os"
-	"os/exec"
+	
 	"path/filepath"
 
 	"testing"
