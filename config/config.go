@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"os"
+	"path/filepath"
 )
 
 // Config ساختاری برای نگهداری تنظیمات پروژه
@@ -15,8 +16,9 @@ type Config struct {
 
 // Load بارگذاری تنظیمات از فایل .env
 func Load() (*Config, error) {
-	// بارگذاری فایل .env
-	err := godotenv.Load()
+	// تعیین مسیر دقیق فایل .env
+	rootPath, _ := filepath.Abs(filepath.Join("..", "..", ".env"))
+	err := godotenv.Load(rootPath)
 	if err != nil {
 		return nil, fmt.Errorf("خطا در بارگذاری فایل .env: %v", err)
 	}
