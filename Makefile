@@ -18,7 +18,7 @@ migrate-down:
 migrate-create:
 	docker run --rm -v $(MIGRATIONS_PATH):/migrations \
 		$(MIGRATE_IMAGE) \
-		create -ext sql -dir /migrations -seq $(name)
+		create -ext sql -dir /migrations -seq $(shell date +%y%m%d)
 
 seed:
 	sudo go run $(PWD)/cmd/seed/main.go
