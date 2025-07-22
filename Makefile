@@ -24,8 +24,8 @@ seed:
 	sudo go run $(PWD)/cmd/seed/main.go
 
 test:
-	go test ./internal/repository/postgres
+	go test ./internal/user/repository/postgres
 	go test ./internal/integration
 test-v:
-	go test -v ./internal/repository/postgres
+	go test -v ./internal/user/repository/postgres
 	go test -v ./internal/integration

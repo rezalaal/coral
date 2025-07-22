@@ -1,7 +1,7 @@
 // internal/repository/interfaces/user_repository.go
 package interfaces
 
-import "github.com/rezalaal/coral/internal/models"
+import "github.com/rezalaal/coral/internal/user/models"
 
 type UserRepository interface {
 	Create(user *models.User) error

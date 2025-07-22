@@ -6,8 +6,8 @@ import (
 	"log"
 
 	"github.com/rezalaal/coral/internal/db"
-	"github.com/rezalaal/coral/internal/models"
-	"github.com/rezalaal/coral/internal/repository/postgres"
+	"github.com/rezalaal/coral/internal/user/models"
+	"github.com/rezalaal/coral/internal/user/repository/postgres"
 )
 
 func main() {

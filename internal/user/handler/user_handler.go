@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rezalaal/coral/internal/models"
-	"github.com/rezalaal/coral/internal/repository/interfaces"
+	"github.com/rezalaal/coral/internal/user/models"
+	"github.com/rezalaal/coral/internal/user/repository/interfaces"
 )
 
 type UserHandler struct {

@@ -1,7 +1,7 @@
 // internal/repository/user_repository.go
 package repository
 
-import "github.com/rezalaal/coral/internal/models"
+import "github.com/rezalaal/coral/internal/user/models"
 
 // UserRepository defines methods to interact with users in the database.
 type UserRepository interface {

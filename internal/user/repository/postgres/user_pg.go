@@ -1,11 +1,11 @@
-// internal/repository/postgres/user_pg.go
+// internal/user/repository/postgres/user_pg.go
 package postgres
 
 import (
 	"database/sql"
 	"errors"
 
-	"github.com/rezalaal/coral/internal/models"
+	"github.com/rezalaal/coral/internal/user/models"
 )
 
 type UserPG struct {

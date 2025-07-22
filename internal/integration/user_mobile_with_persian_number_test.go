@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/rezalaal/coral/internal/integration"
-	"github.com/rezalaal/coral/internal/models"
+	"github.com/rezalaal/coral/internal/user/models"
 )
 
 func TestCreateUser_WithPersianNumbers(t *testing.T) {

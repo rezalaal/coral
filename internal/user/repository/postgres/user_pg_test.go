@@ -1,4 +1,4 @@
-// internal/repository/postgres
+// internal/user/repository/postgres
 package postgres_test
 
 import (
@@ -11,13 +11,13 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/rezalaal/coral/internal/db"
-	"github.com/rezalaal/coral/internal/models"
-	"github.com/rezalaal/coral/internal/repository/postgres"
+	"github.com/rezalaal/coral/internal/user/models"
+	"github.com/rezalaal/coral/internal/user/repository/postgres"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
-    rootPath, _ := filepath.Abs(filepath.Join("..", "..", "..", ".env"))
+    rootPath, _ := filepath.Abs(filepath.Join("..", "..", "..", "..", ".env"))
 	err := godotenv.Load(rootPath)
     if err != nil {
         fmt.Println("⚠️  Failed to load .env:", err)

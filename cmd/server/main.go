@@ -7,7 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/rezalaal/coral/internal/db"
-	"github.com/rezalaal/coral/internal/repository/postgres"
+	"github.com/rezalaal/coral/internal/user/repository/postgres"
 	"github.com/rezalaal/coral/internal/router"
 )
 

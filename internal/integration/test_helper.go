@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/rezalaal/coral/internal/db"
-	"github.com/rezalaal/coral/internal/repository/postgres"
+	"github.com/rezalaal/coral/internal/user/repository/postgres"
 	"github.com/rezalaal/coral/internal/router"
 )
 

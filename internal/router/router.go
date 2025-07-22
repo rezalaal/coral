@@ -3,8 +3,8 @@ package router
 
 import (
 	"net/http"
-	"github.com/rezalaal/coral/internal/handler"
-	"github.com/rezalaal/coral/internal/repository/interfaces"
+	"github.com/rezalaal/coral/internal/user/handler"
+	"github.com/rezalaal/coral/internal/user/repository/interfaces"
 )
 
 func NewRouter(userRepo interfaces.UserRepository) http.Handler {
