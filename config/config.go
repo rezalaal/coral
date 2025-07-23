@@ -1,3 +1,5 @@
+// config/config.go
+
 package config
 
 import (
@@ -43,6 +45,7 @@ func Load() (*Config, error) {
 	// بارگذاری فایل .env
 	err = godotenv.Load(rootPath)
 	if err != nil {
+		// اصلاح پیام خطا برای نشان دادن مسیر دقیق فایل .env
 		return nil, fmt.Errorf("خطا در بارگذاری فایل .env از مسیر %s: %v", rootPath, err)
 	}
 
@@ -55,7 +58,8 @@ func Load() (*Config, error) {
 
 	// بررسی اینکه همه تنظیمات به درستی بارگذاری شده‌اند
 	if config.DatabaseURL == "" || config.KavenegarAPIKey == "" || config.KavenegarTemplate == "" {
-		return nil, fmt.Errorf("تنظیمات ضروری از فایل .env یافت نشد")
+		// اصلاح پیام خطا برای نشان دادن مسیر دقیق و دلیل نبود تنظیمات
+		return nil, fmt.Errorf("تنظیمات ضروری از فایل .env در مسیر %s یافت نشد", rootPath)
 	}
 
 	return config, nil

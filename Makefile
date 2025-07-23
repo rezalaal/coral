@@ -27,6 +27,8 @@ seed:
 test:
 	go test ./internal/user/repository/postgres
 	go test ./internal/integration
+	go test ./config
 test-v:
 	go test -v ./internal/user/repository/postgres
 	go test -v ./internal/integration
+	go test -v ./config
