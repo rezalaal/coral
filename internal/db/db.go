@@ -3,13 +3,15 @@ package db
 
 import (
 	"database/sql"
-	"os"
+	"fmt"	
+
 	_ "github.com/lib/pq"
-	"fmt"
+	"github.com/rezalaal/coral/config"
 )
 
 func Connect() (*sql.DB, error) {
-	connStr := os.Getenv("DATABASE_URL")
+	cfg, err := config.Load()
+	connStr := cfg.DatabaseURL
 	if connStr == "" {
 		return nil, fmt.Errorf("DATABASE_URL environment variable is not set")
 	}

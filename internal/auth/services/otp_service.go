@@ -3,7 +3,9 @@ package service
 import (
 	"fmt"
 	"os"
+
 	"github.com/kavenegar/kavenegar-go"
+	"github.com/rezalaal/coral/config"
 	"github.com/rezalaal/coral/internal/auth/repository"
 )
 
@@ -17,7 +19,11 @@ func NewOTPService(repository *repository.OTPRepository) *OTPService {
 
 // ارسال OTP با استفاده از متد lookup
 func (s *OTPService) SendOTP(mobile string) error {
-	apiKey := os.Getenv("KAVENEGAR_API_KEY")
+	cfg ,err := config.Load()
+	if err != nil {
+		return fmt.Errorf("خطا در خواندن تنظیمات  .env: %v", err)
+	}
+	apiKey := cfg.KavenegarAPIKey
 	client, err := kavenegar.NewClient(apiKey)
 	if err != nil {
 		return fmt.Errorf("خطا در ایجاد مشتری Kavenegar: %v", err)
@@ -27,7 +33,7 @@ func (s *OTPService) SendOTP(mobile string) error {
 	token := "852596" // این باید به طور داینامیک ایجاد شود (مثلاً یک کد تصادفی)
 
 	// ارسال OTP به شماره موبایل با استفاده از lookup
-	_, err = client.Verify.Lookup(mobile, token, os.Getenv("KAVENEGAR_TEMPLATE"))
+	_, err = client.Verify.Lookup(mobile, token, cfg.KavenegarTemplate)
 	if err != nil {
 		return fmt.Errorf("خطا در ارسال OTP با استفاده از متد lookup: %v", err)
 	}

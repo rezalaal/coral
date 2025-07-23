@@ -3,32 +3,15 @@ package postgres_test
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"testing"
 
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/rezalaal/coral/internal/db"
 	"github.com/rezalaal/coral/internal/user/models"
 	"github.com/rezalaal/coral/internal/user/repository/postgres"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestMain(m *testing.M) {
-    rootPath, _ := filepath.Abs(filepath.Join("..", "..", "..", "..", ".env"))
-	err := godotenv.Load(rootPath)
-    if err != nil {
-        fmt.Println("⚠️  Failed to load .env:", err)
-    } else {
-        fmt.Println("✅ .env loaded")
-    }
-
-    code := m.Run()
-    os.Exit(code)
-}
-
 
 
 func TestUserPG_CreateAndGet(t *testing.T) {
