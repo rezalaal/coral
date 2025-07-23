@@ -1,6 +1,7 @@
 MIGRATIONS_PATH=$(shell pwd)/internal/db/migrations
 DB_URL=postgres://cafeuser:cafepass123@db:5432/cafedb?sslmode=disable
-NETWORK_NAME=go-version_cafe-net
+PROJECT_NAME=$(shell basename $(shell pwd))
+NETWORK_NAME=$(PROJECT_NAME)_cafe-net
 MIGRATE_IMAGE=migrate/migrate
 
 migrate-up:
