@@ -4,7 +4,6 @@ package utils
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
-	"github.com/rezalaal/coral/internal/utils"
 )
 
 func TestConvertPersianToEnglishNumbers(t *testing.T) {
@@ -20,7 +19,7 @@ func TestConvertPersianToEnglishNumbers(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.input, func(t *testing.T) {
 			// فراخوانی تابع از پکیج utils
-			result := utils.ConvertPersianToEnglishNumbers(test.input)
+			result := ConvertPersianToEnglishNumbers(test.input)
 			assert.Equal(t, test.expected, result)
 		})
 	}

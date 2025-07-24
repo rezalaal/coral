@@ -28,7 +28,9 @@ test:
 	go test ./internal/user/repository/postgres
 	go test ./internal/integration
 	go test ./config
+	go test ./internal/utils
 test-v:
 	go test -v ./internal/user/repository/postgres
 	go test -v ./internal/integration
 	go test -v ./config
+	go test -v ./internal/utils
