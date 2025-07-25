@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"regexp"
 	"strings"
 
 	"github.com/rezalaal/coral/internal/user/models"
 	"github.com/rezalaal/coral/internal/user/repository/interfaces"
 	"github.com/rezalaal/coral/internal/utils"
+	"github.com/rezalaal/coral/internal/validation"
 )
 
 type UserHandler struct {
@@ -19,31 +19,6 @@ type UserHandler struct {
 func NewUserHandler(repo interfaces.UserRepository) *UserHandler {
 	return &UserHandler{Repo: repo}
 }
-
-func isAlpha(s string) bool {
-	// اصلاح regex برای شناسایی حروف فارسی، انگلیسی و فضای خالی
-	return regexp.MustCompile(`^[a-zA-Z\x{0600}-\x{06FF}\s]+$`).MatchString(s)
-}
-
-func isValidName(name string) bool {
-	// بررسی اینکه نام تنها شامل حروف انگلیسی و فارسی باشد
-	if !isAlpha(name) {
-		return false
-	}
-
-	// بررسی طول نام
-	if len(name) > 100 || len(name) == 0 {
-		return false
-	}
-
-	return true
-}
-
-func isValidMobile(mobile string) bool {
-	// بررسی فرمت شماره موبایل (فقط اعداد و طول دقیق 11 رقم)
-	return regexp.MustCompile(`^\d{11}$`).MatchString(mobile)
-}
-
 
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
@@ -63,12 +38,12 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	user.Mobile = utils.ConvertPersianToEnglishNumbers(user.Mobile)
 
 	// اعتبارسنجی ورودی‌ها
-	if !isValidName(user.Name) {
+	if !validation.IsValidName(user.Name) {
 		http.Error(w, "نام معتبر نیست", http.StatusBadRequest)
 		return
 	}
 
-	if len(user.Mobile) != 11 || !isValidMobile(user.Mobile) {
+	if len(user.Mobile) != 11 || !validation.IsValidMobile(user.Mobile) {
 		http.Error(w, "شماره موبایل نامعتبر است", http.StatusBadRequest)
 		return
 	}
