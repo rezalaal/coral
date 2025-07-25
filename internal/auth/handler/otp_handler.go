@@ -7,10 +7,10 @@ import (
 )
 
 type OTPHandler struct {
-	OTPService *service.OTPService
+	OTPService *services.OTPService
 }
 
-func NewOTPHandler(otpService *service.OTPService) *OTPHandler {
+func NewOTPHandler(otpService *services.OTPService) *OTPHandler {
 	return &OTPHandler{OTPService: otpService}
 }
 
