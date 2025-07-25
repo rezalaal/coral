@@ -29,8 +29,10 @@ test:
 	go test ./internal/integration
 	go test ./config
 	go test ./internal/utils
+	go test ./internal/validation
 test-v:
 	go test -v ./internal/user/repository/postgres
 	go test -v ./internal/integration
 	go test -v ./config
 	go test -v ./internal/utils
+	go test -v ./internal/validation

@@ -12,11 +12,12 @@ func IsValidName(name string) bool {
 	if !IsAlpha(name) {
 		return false
 	}
-	if len(name) > 100 || len(name) == 0 {
+	if len(name) == 0 || len(name) > 80 {
 		return false
 	}
 	return true
 }
+
 
 // بررسی اعتبار شماره موبایل
 func IsValidMobile(mobile string) bool {
