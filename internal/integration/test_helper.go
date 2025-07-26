@@ -10,7 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/rezalaal/coral/internal/db"
-	"github.com/rezalaal/coral/internal/user/repository/postgres"
+	userPG "github.com/rezalaal/coral/internal/user/repository/postgres"
+	otpPG  "github.com/rezalaal/coral/internal/auth/repository/postgres"
 	"github.com/rezalaal/coral/internal/router"
 )
 
@@ -31,13 +32,16 @@ func cleanupDB(t *testing.T, db *sql.DB) {
 	assert.NoError(t, err)
 }
 
-// ساخت سرور تست با پاک‌سازی دیتابیس
 func SetupTestServer(t *testing.T) (*httptest.Server, func()) {
 	dbConn := connectTestDB(t)
 	cleanupDB(t, dbConn)
 
-	userRepo := postgres.NewUserPG(dbConn)
-	r := router.NewRouter(userRepo)
+	userRepo := userPG.NewUserPG(dbConn)
+	// ایجاد OTPRepository برای تست
+	otpRepo := otpPG.NewOTPRepository(dbConn)
+
+	// ارسال userRepo و otpRepo به NewRouter
+	r := router.NewRouter(dbConn, userRepo, otpRepo)
 	server := httptest.NewServer(r)
 
 	teardown := func() {

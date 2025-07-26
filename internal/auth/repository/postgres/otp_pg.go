@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rezalaal/coral/internal/auth/repository/interfaces"
 )
 
 // OTPRepository ساختار برای تعامل با دیتابیس برای OTP
