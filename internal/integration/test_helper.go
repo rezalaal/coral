@@ -1,3 +1,4 @@
+// internal/integration/test_helper.go
 package integration
 
 import (
@@ -32,7 +33,7 @@ func cleanupDB(t *testing.T, db *sql.DB) {
 	assert.NoError(t, err)
 }
 
-func SetupTestServer(t *testing.T) (*httptest.Server, func()) {
+func SetupTestServer(t *testing.T) (*httptest.Server, *sql.DB, func()) {
 	dbConn := connectTestDB(t)
 	cleanupDB(t, dbConn)
 
@@ -49,5 +50,5 @@ func SetupTestServer(t *testing.T) (*httptest.Server, func()) {
 		server.Close()
 	}
 
-	return server, teardown
+	return server, dbConn, teardown
 }

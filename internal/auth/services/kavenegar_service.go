@@ -5,6 +5,14 @@ import (
 	"github.com/kavenegar/kavenegar-go"
 )
 
+type VerifyLookupParam struct {
+	Token   string
+	Token2  string
+	Token3  string
+	Tokens  map[string]string
+	Type    string
+}
+
 // KavenegarService ساختاری برای سرویس Kavenegar
 type KavenegarService struct {
 	client *kavenegar.Client
