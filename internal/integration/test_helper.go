@@ -4,10 +4,10 @@ package integration
 import (
 	"database/sql"
 	"net/http/httptest"
-	"path/filepath"
+	// "path/filepath"
 	"testing"
 
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/rezalaal/coral/internal/db"
@@ -18,9 +18,9 @@ import (
 
 // اتصال به دیتابیس با بررسی خطا
 func connectTestDB(t *testing.T) *sql.DB {
-	rootPath, _ := filepath.Abs(filepath.Join("..", "..", ".env"))
-	err := godotenv.Load(rootPath)
-	assert.NoError(t, err)
+	// rootPath, _ := filepath.Abs(filepath.Join("..", "..", ".env"))
+	// err := godotenv.Load(rootPath)
+	// assert.NoError(t, err)
 	
 	conn, err := db.Connect()
 	assert.NoError(t, err)
@@ -28,14 +28,14 @@ func connectTestDB(t *testing.T) *sql.DB {
 }
 
 // پاک‌سازی دیتابیس (در حال حاضر فقط جدول users)
-func cleanupDB(t *testing.T, db *sql.DB) {
+func CleanupDB(t *testing.T, db *sql.DB) {
 	_, err := db.Exec("DELETE FROM users")
 	assert.NoError(t, err)
 }
 
 func SetupTestServer(t *testing.T) (*httptest.Server, *sql.DB, func()) {
 	dbConn := connectTestDB(t)
-	cleanupDB(t, dbConn)
+	CleanupDB(t, dbConn)
 
 	userRepo := userPG.NewUserPG(dbConn)
 	// ایجاد OTPRepository برای تست

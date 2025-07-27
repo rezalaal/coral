@@ -1,15 +1,13 @@
-// internal/auth/services/otp_service_test.go
-
-package services
+package services_test
 
 import (
 	"net/http"
 	"testing"
 
 	"github.com/rezalaal/coral/internal/auth/repository/postgres"
-	"github.com/rezalaal/coral/internal/integration"
+	"github.com/rezalaal/coral/internal/integration" 
 	"github.com/stretchr/testify/assert"
-	authService "github.com/rezalaal/coral/internal/auth/services"
+	"github.com/rezalaal/coral/internal/auth/services"
 )
 
 func TestSendOTP(t *testing.T) {
@@ -21,9 +19,9 @@ func TestSendOTP(t *testing.T) {
 	mobile := "09120000001" // شماره موبایل واقعی برای تست
 
 	// استفاده از MockKavenegarClient
-	mockKavenegarClient := &authService.MockKavenegarClient{}
+	mockKavenegarClient := &MockKavenegarClient{}
 	otpRepo := postgres.NewOTPRepository(dbConn)
-	otpService := authService.NewOTPService(otpRepo, mockKavenegarClient)
+	otpService := services.NewOTPService(otpRepo, mockKavenegarClient)
 
 	// ارسال OTP
 	err := otpService.SendOTP(mobile)
@@ -37,17 +35,17 @@ func TestSendOTP(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// پاکسازی داده‌ها بعد از تست
-	integration.CleanupDB(t, dbConn)
+	integration.CleanupDB(t, dbConn) // فراخوانی صحیح CleanupDB
 }
 
 func TestVerifyOTP(t *testing.T) {
 	// راه‌اندازی سرور تست و دیتابیس واقعی
-	server, dbConn, teardown := integration.SetupTestServer(t)
+	_, dbConn, teardown := integration.SetupTestServer(t)
 	defer teardown()
 
 	// ارسال OTP به شماره موبایل
 	mobile := "09120000001" // شماره موبایل واقعی برای تست
-	otpService := authService.NewOTPService(postgres.NewOTPRepository(dbConn), &authService.MockKavenegarClient{})
+	otpService := services.NewOTPService(postgres.NewOTPRepository(dbConn), &MockKavenegarClient{})
 
 	// ارسال OTP به موبایل
 	err := otpService.SendOTP(mobile)
@@ -60,5 +58,5 @@ func TestVerifyOTP(t *testing.T) {
 	assert.True(t, valid)
 
 	// پاکسازی داده‌ها بعد از تست
-	integration.CleanupDB(t, dbConn)
+	integration.CleanupDB(t, dbConn) // فراخوانی صحیح CleanupDB
 }

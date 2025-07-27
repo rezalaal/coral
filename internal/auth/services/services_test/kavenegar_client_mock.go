@@ -1,14 +1,17 @@
-// internal/auth/services/kavenegar_client_mock.go
+package services_test
 
-package services
+import (
+	"github.com/rezalaal/coral/internal/auth/services"
+	"github.com/kavenegar/kavenegar-go" // وارد کردن پکیج kavenegar
+)
 
 // MockKavenegarClient برای شبیه‌سازی رفتار KavenegarClient در تست‌ها
 type MockKavenegarClient struct{}
 
 // VerifyLookup شبیه‌سازی متد VerifyLookup
-func (m *MockKavenegarClient) VerifyLookup(mobile, token, template string, params *VerifyLookupParam) (*VerifyResponse, error) {
+func (m *MockKavenegarClient) VerifyLookup(mobile, token, template string, params *kavenegar.VerifyLookupParam) (*services.VerifyResponse, error) {
 	// شبیه‌سازی پاسخ موفق
-	return &VerifyResponse{
+	return &services.VerifyResponse{
 		MessageID: 123456,
 		Message:   "کد تایید عضویت: 852596",
 		Status:    200,
