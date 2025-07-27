@@ -12,7 +12,7 @@ import (
 )
 
 func TestCreateUser_InputValidation(t *testing.T) {
-	server, teardown := integration.SetupTestServer(t)
+	server, _, teardown := integration.SetupTestServer(t)
 	defer teardown()
 
 	tests := []struct {

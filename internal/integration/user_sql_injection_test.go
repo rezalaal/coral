@@ -14,7 +14,7 @@ import (
 )
 
 func TestSQLInjection(t *testing.T) {
-	server, teardown := integration.SetupTestServer(t)
+	server, _, teardown := integration.SetupTestServer(t)
 	defer teardown()
 
 	// تست SQL Injection برای نام کاربر

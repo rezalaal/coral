@@ -15,7 +15,7 @@ import (
 )
 
 func TestUserIntegration(t *testing.T) {
-	server, teardown := integration.SetupTestServer(t)
+	server, _, teardown := integration.SetupTestServer(t)
 	defer teardown()
 
 	// ساخت کاربر با داده‌های معتبر

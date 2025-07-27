@@ -67,7 +67,7 @@ func isMobileUnique(mobile string, db *sql.DB) bool {
 }
 
 func TestScalabilityWithLargeData(t *testing.T) {
-	server, teardown := integration.SetupTestServer(t)
+	server, _, teardown := integration.SetupTestServer(t)
 	defer teardown()
 
 	// ایجاد اتصال به پایگاه داده برای بررسی یکتایی شماره موبایل

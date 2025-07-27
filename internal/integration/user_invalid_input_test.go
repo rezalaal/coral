@@ -13,7 +13,7 @@ import (
 )
 
 func TestCreateUser_InvalidInput(t *testing.T) {
-	server, teardown := integration.SetupTestServer(t)
+	server, _, teardown := integration.SetupTestServer(t)
 	defer teardown()
 
 	tests := []struct {
