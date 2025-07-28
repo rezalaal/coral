@@ -1,8 +1,10 @@
+// internal/auth/services/kavenegar_client_mock.go
+
 package services_test
 
 import (
 	"github.com/rezalaal/coral/internal/auth/services"
-	"github.com/kavenegar/kavenegar-go" // وارد کردن پکیج kavenegar
+	"github.com/kavenegar/kavenegar-go"
 )
 
 // MockKavenegarClient برای شبیه‌سازی رفتار KavenegarClient در تست‌ها

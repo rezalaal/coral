@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/rezalaal/coral/internal/auth/repository/postgres"
-	"github.com/rezalaal/coral/internal/integration" 
+	"github.com/rezalaal/coral/internal/integration"
 	"github.com/stretchr/testify/assert"
 	"github.com/rezalaal/coral/internal/auth/services"
 )
@@ -35,7 +35,7 @@ func TestSendOTP(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// پاکسازی داده‌ها بعد از تست
-	integration.CleanupDB(t, dbConn) // فراخوانی صحیح CleanupDB
+	integration.CleanupDB(t, dbConn)
 }
 
 func TestVerifyOTP(t *testing.T) {
@@ -58,5 +58,5 @@ func TestVerifyOTP(t *testing.T) {
 	assert.True(t, valid)
 
 	// پاکسازی داده‌ها بعد از تست
-	integration.CleanupDB(t, dbConn) // فراخوانی صحیح CleanupDB
+	integration.CleanupDB(t, dbConn)
 }

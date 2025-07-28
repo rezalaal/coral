@@ -40,7 +40,7 @@ func Load() (*Config, error) {
 	rootPath := filepath.Join(currentDir, ".env")
 
 	// چاپ مسیر برای دیباگ
-	fmt.Println("Loading .env from path:", rootPath)
+	// fmt.Println("Loading .env from path:", rootPath)
 
 	// بارگذاری فایل .env
 	err = godotenv.Load(rootPath)
