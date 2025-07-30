@@ -1,10 +1,10 @@
+// internal/auth/handler/otp_handler.go
 package handler
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
-
 	"github.com/rezalaal/coral/internal/auth/services"
 )
 

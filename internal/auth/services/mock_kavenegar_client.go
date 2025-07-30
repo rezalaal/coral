@@ -1,6 +1,8 @@
 package services
 
 import (
+	"log"
+
 	"github.com/kavenegar/kavenegar-go"
 )
 
@@ -9,6 +11,9 @@ type MockKavenegarClient struct{}
 
 // VerifyLookup شبیه‌سازی متد VerifyLookup
 func (m *MockKavenegarClient) VerifyLookup(mobile, token, template string, params *kavenegar.VerifyLookupParam) (*VerifyResponse, error) {
+	// لاگ برای مشاهده داده‌های ورودی
+	log.Printf("MockKavenegarClient: VerifyLookup called with mobile: %s, token: %s, template: %s, params: %+v", mobile, token, template, params)
+
 	// شبیه‌سازی پاسخ موفق
 	return &VerifyResponse{
 		MessageID: 123456,

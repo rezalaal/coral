@@ -1,12 +1,12 @@
+// internal/auth/services/otp_service.go
 package services
 
 import (
 	"fmt"
 	"log"
-
+	"github.com/rezalaal/coral/internal/auth/repository/interfaces"
 	"github.com/kavenegar/kavenegar-go"
 	"github.com/rezalaal/coral/config"
-	"github.com/rezalaal/coral/internal/auth/repository/interfaces"
 )
 
 type OTPService struct {
@@ -16,7 +16,7 @@ type OTPService struct {
 
 // NewOTPService برای ایجاد یک نمونه از سرویس OTP
 func NewOTPService(repository interfaces.OTPRepository, kavenegarClient KavenegarClient) *OTPService {
-	log.Println("Created new OTP Service")
+	log.Println("Created new OTP Service with Repository:", repository, "and KavenegarClient:", kavenegarClient)
 	return &OTPService{Repository: repository, KavenegarClient: kavenegarClient}
 }
 

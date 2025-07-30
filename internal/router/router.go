@@ -1,11 +1,10 @@
+// internal/router/router.go
 package router
 
 import (
 	"database/sql"
 	"log"
 	"net/http"
-	"os"
-
 	"github.com/rezalaal/coral/config"
 	authHandler "github.com/rezalaal/coral/internal/auth/handler"
 	authRepoInterfaces "github.com/rezalaal/coral/internal/auth/repository/interfaces"
@@ -20,29 +19,18 @@ func NewRouter(db *sql.DB, userRepo userRepoInterfaces.UserRepository, otpRepo a
 	// Handlers
 	userHandler := userHandler.NewUserHandler(userRepo)
 
-	// خواندن تنظیمات .env
+	// ایجاد سرویس Kavenegar
 	cfg, err := config.Load()
 	if err != nil {
-		panic("خطا در خواندن تنظیمات .env")
+		panic("خطا در خواندن تنظیمات .env") // یا می‌توانید یک خطای مناسب مدیریت کنید
 	}
+	kavenegarService := services.NewKavenegarService(cfg.KavenegarAPIKey)
 
-	// چک کردن متغیر محیطی
-	environment := os.Getenv("ENVIRONMENT")
-	var otpService *services.OTPService
-
-	if environment == "development" {
-		// در حالت development از Mock استفاده می‌کنیم
-		otpService = services.NewOTPService(otpRepo, &services.MockKavenegarClient{})
-		log.Println("Running in development mode. Using Mock OTP Service.")
-	} else {
-		// در حالت‌های دیگر از Kavenegar استفاده می‌کنیم
-		kavenegarService := services.NewKavenegarService(cfg.KavenegarAPIKey)
-		otpService = services.NewOTPService(otpRepo, kavenegarService) // ارسال KavenegarService به OTPService
-		log.Println("Running in production mode. Using real Kavenegar Service.")
-	}
+	// ساخت OTPService
+	otpService := services.NewOTPService(otpRepo, kavenegarService) // ارسال KavenegarService به OTPService
 
 	// ایجاد OTPHandler
-	otpHandler := authHandler.NewOTPHandler(otpService)
+	otpHandler := authHandler.NewOTPHandler(otpService) // اینجا OTPHandler ساخته می‌شود
 
 	// روت‌ها
 	mux.HandleFunc("/users", userHandler.GetUsers)           // GET
