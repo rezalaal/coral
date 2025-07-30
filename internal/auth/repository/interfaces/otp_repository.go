@@ -3,6 +3,9 @@ package interfaces
 
 // OTPRepository interface برای عملیات ذخیره و بازیابی OTP
 type OTPRepository interface {
-	SaveOTP(mobile, otp string) error
+	// ذخیره OTP در دیتابیس
+	SaveOTP(mobile string, otp string) error
+
+	// دریافت OTP از دیتابیس
 	GetOTP(mobile string) (string, error)
 }

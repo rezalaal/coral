@@ -2,7 +2,9 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+
 	"github.com/rezalaal/coral/internal/auth/services"
 )
 
@@ -16,6 +18,7 @@ func NewOTPHandler(otpService *services.OTPService) *OTPHandler {
 
 // درخواست ارسال OTP
 func (h *OTPHandler) SendOTP(w http.ResponseWriter, r *http.Request) {
+	log.Println("Send OTP method")
 	var request map[string]string
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, "خطای تجزیه‌ی JSON", http.StatusBadRequest)
