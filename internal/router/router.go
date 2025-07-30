@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/rezalaal/coral/config"
 	authHandler "github.com/rezalaal/coral/internal/auth/handler"
@@ -19,18 +20,29 @@ func NewRouter(db *sql.DB, userRepo userRepoInterfaces.UserRepository, otpRepo a
 	// Handlers
 	userHandler := userHandler.NewUserHandler(userRepo)
 
-	// ایجاد سرویس Kavenegar
+	// خواندن تنظیمات .env
 	cfg, err := config.Load()
 	if err != nil {
-		panic("خطا در خواندن تنظیمات .env") // یا می‌توانید یک خطای مناسب مدیریت کنید
+		panic("خطا در خواندن تنظیمات .env")
 	}
-	kavenegarService := services.NewKavenegarService(cfg.KavenegarAPIKey)
 
-	// ساخت OTPService
-	otpService := services.NewOTPService(otpRepo, kavenegarService) // ارسال KavenegarService به OTPService
+	// چک کردن متغیر محیطی
+	environment := os.Getenv("ENVIRONMENT")
+	var otpService *services.OTPService
+
+	if environment == "development" {
+		// در حالت development از Mock استفاده می‌کنیم
+		otpService = services.NewOTPService(otpRepo, &services.MockKavenegarClient{})
+		log.Println("Running in development mode. Using Mock OTP Service.")
+	} else {
+		// در حالت‌های دیگر از Kavenegar استفاده می‌کنیم
+		kavenegarService := services.NewKavenegarService(cfg.KavenegarAPIKey)
+		otpService = services.NewOTPService(otpRepo, kavenegarService) // ارسال KavenegarService به OTPService
+		log.Println("Running in production mode. Using real Kavenegar Service.")
+	}
 
 	// ایجاد OTPHandler
-	otpHandler := authHandler.NewOTPHandler(otpService) // اینجا OTPHandler ساخته می‌شود
+	otpHandler := authHandler.NewOTPHandler(otpService)
 
 	// روت‌ها
 	mux.HandleFunc("/users", userHandler.GetUsers)           // GET
@@ -42,18 +54,7 @@ func NewRouter(db *sql.DB, userRepo userRepoInterfaces.UserRepository, otpRepo a
 		w.Write([]byte("Hello, World!"))
 	})
 
-    mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
-        log.Println("Received a request at /test")
-        if r.Method == http.MethodPost {
-            log.Println("Handling POST request")
-            otpHandler.SendOTP(w, r)
-        } else {
-            log.Println("Method Not Allowed")
-            http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-        }
-    })
-
-	// mux.HandleFunc("/otp/send", otpHandler.SendOTP)       // POST
+	mux.HandleFunc("/otp/send", otpHandler.SendOTP)       // POST
 	mux.HandleFunc("/otp/verify", otpHandler.VerifyOTP)   // POST
 
 	return mux
