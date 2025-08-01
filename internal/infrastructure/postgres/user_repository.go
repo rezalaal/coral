@@ -1,9 +1,17 @@
 package postgres
 
 import (
-	"database/sql"
 	"coral/internal/domain/user"
+	"database/sql"
+	"errors"
 )
+
+var ErrUserNotFound = errors.New("user not found")
+
+type UserRepository interface {
+	Create(user *model.User) error
+	FindByEmail(email string) (*models.User, error)
+}
 
 type UserRepo struct {
 	DB *sql.DB

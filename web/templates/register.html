@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ثبت‌نام</title>
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  <link href="/static/css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+  <div class="w-full max-w-md bg-white p-6 rounded-lg shadow">
+    <h2 class="text-xl font-semibold mb-4 text-center">فرم ثبت‌نام</h2>
+
+    <form 
+      hx-post="/register" 
+      hx-target="#form-messages"
+      hx-swap="innerHTML"
+      class="space-y-4"
+    >
+      <div>
+        <label class="block mb-1 text-sm font-medium">نام</label>
+        <input type="text" name="name" class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+
+      <div>
+        <label class="block mb-1 text-sm font-medium">ایمیل</label>
+        <input type="email" name="email" class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+
+      <div>
+        <label class="block mb-1 text-sm font-medium">رمز عبور</label>
+        <input type="password" name="password" class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+
+      <div id="form-messages"></div>
+
+      <button 
+        type="submit" 
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded"
+      >
+        ثبت‌نام
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>
