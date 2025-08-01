@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/rezalaal/coral/internal/integration"
+	"coral/internal/integration"
 )
 
 func TestSQLInjection(t *testing.T) {

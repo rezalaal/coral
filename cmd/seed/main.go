@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/rezalaal/coral/internal/db"
-	"github.com/rezalaal/coral/internal/user/models"
-	"github.com/rezalaal/coral/internal/user/repository/postgres"
+	"coral/internal/db"
+	"coral/internal/domain/user"
+	"coral/internal/infrastructure/postgres"
 )
+
 
 func main() {
 	database, err := db.Connect()
@@ -19,9 +20,9 @@ func main() {
 	userRepo := postgres.NewUserPG(database)
 
 	// کاربران اولیه
-	users := []models.User{
-		{Name: "علی", Mobile: "09121234567", PasswordHash: "hashed-password-1"},
-		{Name: "زهرا", Mobile: "09391234567", PasswordHash: "hashed-password-2"},
+	users := []user.User{
+		{Name: "علی", Mobile: "09121234567", Password: "hashed-password-1"},
+		{Name: "زهرا", Mobile: "09391234567", Password: "hashed-password-2"},
 	}
 	for _, u := range users {
 		err := userRepo.Create(&u)

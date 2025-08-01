@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/rezalaal/coral/internal/integration"
-	"github.com/rezalaal/coral/internal/user/models"
+	"coral/internal/integration"
+	"coral/internal/user/models"
 )
 
 func TestCreateUser_WithPersianNumbers(t *testing.T) {

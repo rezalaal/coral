@@ -1,37 +1,40 @@
 package main
 
 import (
-    "log"
-    "net/http"
+	"database/sql"
+	"log"
+	"net/http"
+	"os"
 
-    "github.com/joho/godotenv"
-    "github.com/rezalaal/coral/internal/db"
-    "github.com/rezalaal/coral/internal/user/repository/postgres"
-    "github.com/rezalaal/coral/internal/router"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
+	"coral/internal/router"
 )
 
 func main() {
-    // بارگذاری فایل .env
-    err := godotenv.Load()
-    if err != nil {
-        log.Println(".env not found")
-    }
+	// Load .env
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system env vars")
+	}
 
-    // اتصال به دیتابیس
-    dbConn, err := db.Connect()
-    if err != nil {
-        log.Fatal("Database connection failed:", err)
-    }
+	dbURL := os.Getenv("DB_URL")
+	if dbURL == "" {
+		log.Fatal("DB_URL not set in .env")
+	}
 
-    // ایجاد repository برای user
-    userRepo := postgres.NewUserPG(dbConn)
+	db, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatal("DB connection failed:", err)
+	}
+	defer db.Close()
 
-    // ایجاد و راه‌اندازی روت‌ها
-    r := router.NewRouter(dbConn, userRepo, nil)
+	// DI Container with secrets
+	c := router.NewContainer(db)
 
-    // راه‌اندازی سرور
-    log.Println("Server running on :8080")
-    if err := http.ListenAndServe(":8080", r); err != nil {
-        log.Fatal(err)
-    }
+	// HTTP Router
+	r := router.NewRouter(c)
+
+	// Start Server
+	log.Println("Server running on :8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

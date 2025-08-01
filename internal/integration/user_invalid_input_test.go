@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	
-	"github.com/rezalaal/coral/internal/integration"
+	"coral/internal/integration"
 )
 
 func TestCreateUser_InvalidInput(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"fmt"	
 
 	_ "github.com/lib/pq"
-	"github.com/rezalaal/coral/config"
+	"coral/config"
 )
 
 func Connect() (*sql.DB, error) {
