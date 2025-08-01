@@ -1,10 +1,12 @@
-CREATE TABLE otp_codes (
-    id SERIAL PRIMARY KEY,
-    mobile VARCHAR(15) NOT NULL,
-    code VARCHAR(6) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP WITH TIME ZONE
+CREATE TABLE otps (
+  mobile VARCHAR(20) PRIMARY KEY,
+  code VARCHAR(10) NOT NULL,
+  expires_at BIGINT NOT NULL
 );
 
--- ایجاد ایندکس برای mobile جهت جستجو سریع‌تر
-CREATE INDEX idx_otp_mobile ON otp_codes(mobile);
+CREATE TABLE otp_requests (
+  id SERIAL PRIMARY KEY,
+  mobile VARCHAR(20),
+  requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_otp_mobile_time ON otp_requests (mobile, requested_at);
